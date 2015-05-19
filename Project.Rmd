@@ -20,7 +20,7 @@ Reproducibility
  
 The research must follow several methods in order to reproduce these results. First, a seed was set at 9876 for modeling.
  
-> # Set seed for reproducibility
+Set seed for reproducibility
 > set.seed(9876)
  
  

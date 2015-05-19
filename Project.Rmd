@@ -47,35 +47,35 @@ The researcher must install and load the appropriate packages in order to conduc
 >install.packages("randomForest")
 >install.packages("rpart")
  
-> # Loading required package: lattice
+Loading required package: lattice
 > library(lattice)
-> # Loading required package: ggplot2
+Loading required package: ggplot2
 > library(ggplot2)
  
-> #Classification and regression
+Classification and regression
 > library(caret)
 > library(randomForest)
-> # Regressive Partitioning and Regression trees
+Regressive Partitioning and Regression trees
 > library(rpart)
-> # Decision Tree plot
+Decision Tree plot
 > library(rpart.plot)
  
  
 Get and Clean Data
  
-> #Load and clean data
->
-> # Load training data set into my R session replacing all missing with "NA"
+Load and clean data
+
+Load training data set into my R session replacing all missing with "NA"
 > trainingset <- read.csv("C:/Users/thomasr/Documents/trainingdata.csv", na.strings=c("NA","#DIV/0!", ""))
->
-> # Load testing data set
+
+Load testing data set
 > testingset <- read.csv('C:/Users/thomasr/Documents/testingdata.csv', na.strings=c("NA","#DIV/0!", ""))
  
-> # Delete columns with all missing values
+Delete columns with all missing values
 > trainingset<-trainingset[,colSums(is.na(trainingset)) == 0]
 > testingset <-testingset[,colSums(is.na(testingset)) == 0]
  
-># Summary statistics
+Summary statistics
 >dim(trainingset)
 >head(trainingset)
 >dim(testingset)
@@ -84,8 +84,8 @@ Get and Clean Data
 Cross-validation and Data Partitioning
  
  
-> #In order to perform cross-validation, the training data set is partionned into 2 sets: subTraining (75%) and subTest (25%) random subsampling without replacement.
->
+In order to perform cross-validation, the training data set is partionned into 2 sets: subTraining (75%) and subTest (25%) random subsampling without replacement.
+
 > subsamples <- createDataPartition(y=trainingset$classe, p=0.75, list=FALSE)
 > subTraining <- trainingset[subsamples, ]
 > subTesting <- trainingset[-subsamples, ]
@@ -94,12 +94,11 @@ Cross-validation and Data Partitioning
  
 Our models will be fitted on the subTraining data set, and tested on the subTesting data. Once the most accurate model is choosen, it will be tested on the original Testing data set.
  
-> #Explore the data
+Explore the data
 > summary(subTraining)
 > plot(subTraining$classe, col="green", main="Bar Plot of levels of the variable classe within the subTraining data set", xlab="classe levels", ylab="Frequency")
- 
- 
-> #Classe A is the most frequent, D is the least frequent.
+
+Classe A is the most frequent, D is the least frequent.
  
 Expected out-of-sample error
  
@@ -107,20 +106,18 @@ The expected out-of-sample error will correspond to the quantity: 1-Sensitivity 
  
 ML Algorithm: Decision Trees
  
-> #First prediction model: Decision Tree with rpart
+First prediction model: Decision Tree with rpart
 > model1 <- rpart(classe ~ ., data=subTraining, method="class")
->
-> # Predicting:
+
+Predicting:
 > prediction1 <- predict(model1, subTesting, type = "class")
 >
-> # Plot of the Decision Tree
+Plot of the Decision Tree
 > rpart.plot(model1, main="Classification Tree", extra=102, under=TRUE, faclen=0)
- 
- 
 > library(rattle)
 > fancyRpartPlot(model1)
  
-> # Test results on subTesting:
+Test results on subTesting:
 > confusionMatrix(prediction1, subTesting$classe)
  
 Confusion Matrix and Statistics
@@ -157,13 +154,13 @@ Balanced Accuracy      0.9068   0.7742   0.8620   0.7862   0.8543
  
 ML Algorithm: Random Forest
  
-> #Second prediction model: Using Random Forest
->
+Second prediction model: Using Random Forest
+
 > model2 <- randomForest(classe ~. , data=subTraining, method="class")
  
-> # Predicting:
+Predicting:
 > prediction2 <- predict(model2, subTesting, type = "class")
-> # Test results on subTesting data set:
+Test results on subTesting data set:
 > confusionMatrix(prediction2, subTesting$classe)
 Confusion Matrix and Statistics
  
